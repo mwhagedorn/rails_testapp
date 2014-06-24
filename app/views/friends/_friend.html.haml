@@ -1,0 +1,14 @@
+%div.friend { :id => "#{friend}"}
+  .front
+    = link_to friend, :class => "pic-link"
+      = image_tag friend.avatar.url(:square)
+
+  .back
+    %span.friend-name
+      = friend.name
+    .actions
+      = link_to 'Show',friend
+      = link_to 'Edit', edit_friend_path(friend)
+      = link_to 'Delete', friend, confirm: 'Are you sure you want to lose a friend?', method: :delete, class: 'destroy'
+      
+
