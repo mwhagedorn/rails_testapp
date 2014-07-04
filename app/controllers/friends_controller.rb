@@ -24,17 +24,26 @@ class FriendsController < ApplicationController
   # POST /friends
   # POST /friends.json
   def create
-    @friend = Friend.new(friend_params)
+    @cpu_logger = CpuUpdater.new
+    @cpu_logger.do_cpu_logging
 
-    respond_to do |format|
-      if @friend.save
-        format.html { redirect_to @friend, notice: 'Friend was successfully created.' }
-        format.json { render action: 'show', status: :created, location: @friend }
-      else
-        format.html { render action: 'new' }
-        format.json { render json: @friend.errors, status: :unprocessable_entity }
+    ActiveSupport::Notifications.instrument("new_friend.paperclip", :params => {}) do
+      @friend = Friend.new(friend_params)
+    end
+
+    ActiveSupport::Notifications.instrument("new_avatar.paperclip", :params => {}) do
+      respond_to do |format|
+        @result = @friend.save
+        if @result
+          format.html { redirect_to @friend, notice: 'Friend was successfully created.' }
+          format.json { render action: 'show', status: :created, location: @friend }
+        else
+          format.html { render action: 'new' }
+          format.json { render json: @friend.errors, status: :unprocessable_entity }
+        end
       end
     end
+    @cpu_logger.stop
   end
 
   # PATCH/PUT /friends/1
@@ -62,14 +71,14 @@ class FriendsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_friend
-      @friend = Friend.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_friend
+    @friend = Friend.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def friend_params
-      params.require(:friend).permit(:avatar, :name)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def friend_params
+    params.require(:friend).permit(:avatar, :name)
+  end
 end
 

@@ -6,9 +6,6 @@
 = image_tag @friend.avatar.url(:medium)
 
 %div{ :class => "show actions" }
-  = link_to "edit" edit_friend_path(@friend)
-  = link_to "remove", @friend, data: { confirm: "Are you sure?"}, method:delete, class: 'destroy'
+  = link_to "edit",edit_friend_path(@friend)
+  = link_to "remove", @friend, data: { confirm: "Are you sure?"}, method: :delete, class: 'destroy'
   = link_to "Back to all my friends", friends_path
-
-
-

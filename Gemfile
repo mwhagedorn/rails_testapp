@@ -15,7 +15,7 @@ gem 'haml-rails'
 gem 'high_voltage'
 gem "fog"
 gem "paperclip"
-
+gem 'statsd-ruby'
 
 group :development do
   gem 'better_errors'
@@ -35,4 +35,6 @@ group :test do
   gem 'faker'
   gem 'launchy'
   gem 'selenium-webdriver'
+  gem "ruby-prof"
+  gem "rails-perftest"
 end
